@@ -1,6 +1,11 @@
 from collections import namedtuple
 import numpy as np
 import matplotlib.pyplot as plt
+import datetime
+
+def formatTime(hours):    
+    delta = datetime.timedelta(hours=hours)  
+    return delta - datetime.timedelta(microseconds=delta.microseconds)
 
 class Entry:
     def __init__(self, arrival, serviceTime, serviced, wait):
@@ -8,9 +13,9 @@ class Entry:
         self.serviceTime = 0
         self.serviced = 0
         self.wait = 0
-    
+
     def toString(self):
-        return str(format(self.arrival, '.5f')) + "       " + str(format(self.serviceTime, '.5f')) + "       " + str(format(self.serviced, '.5f')) + "       " + str(format(self.wait, '.5f'))
+        return str(formatTime(self.arrival)) + "       " + str(formatTime(self.serviceTime)) + "       " + str(formatTime(self.serviced)) + "       " + str(formatTime(self.wait))
 
 numServers = 1
 simulationTime = 1 # time units
@@ -47,12 +52,12 @@ for i in range(qtdEntries):
     print("\n")
 
 serviceTimes = [list[i].serviceTime for i in range(len(list))]
-print("\nDuração média de uma tarefa: " + str(np.average(serviceTimes)))
+print("\nDuração média de uma tarefa: " + str(formatTime(np.average(serviceTimes))))
 
 waitTimes = [list[i].wait for i in range(len(list))]
-print("\nTempo de espera médio de uma tarefa: " + str(np.average(waitTimes)))
+print("\nTempo de espera médio de uma tarefa: " + str(formatTime(np.average(waitTimes))))
 
 totalAverageServiceTime = [list[i].wait+list[i].serviceTime for i in range(len(list))]
-print("\nTempo total médio de uma tarefa: " + str(np.average(totalAverageServiceTime)))
+print("\nTempo total médio de uma tarefa: " + str(formatTime(np.average(totalAverageServiceTime))))
 
 input('Press ENTER to exit')
