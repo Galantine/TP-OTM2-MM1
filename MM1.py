@@ -13,7 +13,7 @@ class Entry:
         return str(format(self.arrival, '.5f')) + "       " + str(format(self.serviceTime, '.5f')) + "       " + str(format(self.serviced, '.5f')) + "       " + str(format(self.wait, '.5f'))
 
 numServers = 1
-simulationTime = 8 # time units
+simulationTime = 1 # time units
 entryRate = 4 # per time unit
 serviceRate = 2 # per time unit
 qtdEntries = 0 # total number of entries on the queue
@@ -26,6 +26,9 @@ list = [Entry(0,0,0,0) for i in range(qtdEntries)] # create list with all entrie
 list[0].serviceTime = np.random.exponential(1/serviceRate) # gives value for the first entry assuming we start "recording"
                                                            # when the first entry comes, so it will start on 0
 accumulatedServiceTime = list[0].serviceTime # accumulated service time to know if entries will have to wait or not
+
+queueSizes = []
+queueSizes.append(1)
 
 for i in range(1, qtdEntries): # iteration over list to get the values
     list[i].arrival = list[i-1].arrival + np.random.exponential(1/entryRate) # the nth entry will have an arrival time later than the (n-1)th entry
@@ -42,5 +45,14 @@ for i in range(qtdEntries):
     print("Arrival       ServiceTime   Serviced       WaitTime")
     print(list[i].toString())
     print("\n")
+
+serviceTimes = [list[i].serviceTime for i in range(len(list))]
+print("\nDuração média de uma tarefa: " + str(np.average(serviceTimes)))
+
+waitTimes = [list[i].wait for i in range(len(list))]
+print("\nTempo de espera médio de uma tarefa: " + str(np.average(waitTimes)))
+
+totalAverageServiceTime = [list[i].wait+list[i].serviceTime for i in range(len(list))]
+print("\nTempo total médio de uma tarefa: " + str(np.average(totalAverageServiceTime)))
 
 input('Press ENTER to exit')
