@@ -68,7 +68,7 @@ for i in range(qtdEntries):
 
 print("\nTempo total simulação: " + formatTime(totalSimulationTime))
 
-print("\nTamanho médio da fila: " + str(np.average(filaQtd)))
+print("\nNúmero de tarefas realizadas: " + str(qtdEntries))
 
 serviceTimes = [list[i].serviceTime for i in range(len(list))]
 print("\nDuração média de uma tarefa: " + str(formatTime(np.average(serviceTimes))))
@@ -78,5 +78,7 @@ print("\nTempo de espera médio de uma tarefa: " + str(formatTime(np.average(wai
 
 totalAverageServiceTime = [list[i].wait+list[i].serviceTime for i in range(len(list))]
 print("\nTempo total médio de uma tarefa: " + str(formatTime(np.average(totalAverageServiceTime))))
+
+print("\nTamanho médio da fila: " + str(np.average(filaQtd)))
 
 input('Press ENTER to exit')
