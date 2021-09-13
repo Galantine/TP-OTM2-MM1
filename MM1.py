@@ -1,11 +1,12 @@
 from collections import namedtuple
 import numpy as np
+import math
 import matplotlib.pyplot as plt
 import datetime
 
 def formatTime(hours):    
     delta = datetime.timedelta(hours=hours)  
-    return delta - datetime.timedelta(microseconds=delta.microseconds)
+    return str(delta - datetime.timedelta(microseconds=delta.microseconds))
 
 class Entry:
     def __init__(self, arrival, serviceTime, serviced, wait):
@@ -17,8 +18,10 @@ class Entry:
     def toString(self):
         return str(formatTime(self.arrival)) + "       " + str(formatTime(self.serviceTime)) + "       " + str(formatTime(self.serviced)) + "       " + str(formatTime(self.wait))
 
+fila = []
+filaQtd = []
 numServers = 1
-simulationTime = 1 # time units
+simulationTime = 8 # time units
 entryRate = 4 # per time unit
 serviceRate = 2 # per time unit
 qtdEntries = 0 # total number of entries on the queue
@@ -46,10 +49,26 @@ for i in range(1, qtdEntries): # iteration over list to get the values
         accumulatedServiceTime+=list[i].arrival+list[i].serviceTime # the accumulated time is now updated to be the time when the current entry finishes
     list[i].wait = list[i].serviced - list[i].arrival # how much time the entry waited is now stored
 
+lastProcess = list[len(list) - 1]
+totalSimulationTime = lastProcess.serviced + lastProcess.serviceTime
+for i in range(0, int(totalSimulationTime*60*60)):
+    for j in range(qtdEntries):
+        if i == math.floor(list[j].arrival*60*60):
+            fila.append(j)
+            filaQtd.append(len(fila))
+        if i == math.floor(list[j].serviced*60*60):
+            fila.pop(0)
+            filaQtd.append(len(fila))
+    
+
 for i in range(qtdEntries):
     print("Arrival       ServiceTime   Serviced       WaitTime")
     print(list[i].toString())
     print("\n")
+
+print("\nTempo total simulação: " + formatTime(totalSimulationTime))
+
+print("\nTamanho médio da fila: " + str(np.average(filaQtd)))
 
 serviceTimes = [list[i].serviceTime for i in range(len(list))]
 print("\nDuração média de uma tarefa: " + str(formatTime(np.average(serviceTimes))))
